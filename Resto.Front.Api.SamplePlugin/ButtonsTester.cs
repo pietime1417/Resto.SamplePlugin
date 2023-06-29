@@ -62,41 +62,41 @@ namespace Resto.Front.Api.SamplePlugin
 
             PluginContext.Log.InfoFormat("Delivery order changed| Number: {0}, Status: {1}", deliveryOrder.Number, deliveryOrder.DeliveryStatus);
 
-            string sosat = "";
-            string a = "{";
-            string b = "}";
-            string devStatus = "";
+            string jsonResult = "";
+            string curlyBrace1 = "{";
+            string curlyBrace2 = "}";
+            string rusStatus = "";
 
             switch(deliveryOrder.DeliveryStatus)
             {
                 case DeliveryStatus.New:
-                    devStatus = "Готовится";
+                    rusStatus = "Готовится";
                     break;
                 case DeliveryStatus.Waiting:
-                    devStatus = "Приготовлен";
+                    rusStatus = "Приготовлен";
                     break;
                 case DeliveryStatus.OnWay:
-                    devStatus = "Отправлен";
+                    rusStatus = "Отправлен";
                     break;
                 case DeliveryStatus.Delivered:
-                    devStatus = "Доставлен";
+                    rusStatus = "Доставлен";
                     break;
                 case DeliveryStatus.Closed:
-                    devStatus = "Закрыт";
+                    rusStatus = "Закрыт";
                     break;
                 case DeliveryStatus.Cancelled:
-                    devStatus = "Отменен";
+                    rusStatus = "Отменен";
                     break;
                 case DeliveryStatus.Unconfirmed:
-                    devStatus = "Неподтвержден";
+                    rusStatus = "Неподтвержден";
                     break;
             }
 
-            sosat = string.Format("{0}\r\n    \"body\":\"Номер:{3}, Статус:{4}\",\r\n    \"recipient\":\"{2}\"\r\n{1}", a, b, deliveryOrder.Phone, deliveryOrder.Number, devStatus);
+            jsonResult = string.Format("{0}\r\n    \"body\":\"Номер:{3}, Статус:{4}\",\r\n    \"recipient\":\"{2}\"\r\n{1}", curlyBrace1, curlyBrace2, deliveryOrder.Phone, deliveryOrder.Number, rusStatus);
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, "https://wappi.pro/api/async/message/send?profile_id=31e877b3-8fc1");
             request.Headers.Add("Authorization", "e43f33652cc3e8a3e12ecfde461b6a1899f44330");
-            var content = new StringContent(sosat, Encoding.UTF8, "text/plain");
+            var content = new StringContent(jsonResult, Encoding.UTF8, "text/plain");
             request.Content = content;
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
